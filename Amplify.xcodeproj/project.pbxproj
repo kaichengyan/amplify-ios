@@ -381,6 +381,7 @@
 		FA176ED923858A3800C5C5F9 /* Amplify+HubPayloadEventName.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA176ED823858A3800C5C5F9 /* Amplify+HubPayloadEventName.swift */; };
 		FA176EDD2385943000C5C5F9 /* NotificationListeningAnalyticsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA176EDC2385943000C5C5F9 /* NotificationListeningAnalyticsPlugin.swift */; };
 		FA1846EE23998E44009B9D01 /* MockAPIResponders.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1846ED23998E43009B9D01 /* MockAPIResponders.swift */; };
+		FA1B964E24BF5FA70002B90A /* AmplifyOperationCombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1B964D24BF5FA70002B90A /* AmplifyOperationCombineTests.swift */; };
 		FA315295233D634900DE78E7 /* StorageDownloadFileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA315294233D634900DE78E7 /* StorageDownloadFileRequest.swift */; };
 		FA315298233D644F00DE78E7 /* StorageDownloadDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA315297233D644F00DE78E7 /* StorageDownloadDataRequest.swift */; };
 		FA31529A233D645200DE78E7 /* StorageGetURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA315299233D645200DE78E7 /* StorageGetURLRequest.swift */; };
@@ -439,6 +440,7 @@
 		FAA64FC32397294600B9C3C6 /* ModelSchema+Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA64FC22397294500B9C3C6 /* ModelSchema+Attributes.swift */; };
 		FAA64FC52397344D00B9C3C6 /* AtomicValue+RangeReplaceableCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA64FC42397344D00B9C3C6 /* AtomicValue+RangeReplaceableCollection.swift */; };
 		FAA64FC72397347B00B9C3C6 /* AtomicValue+RangeReplaceableCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA64FC62397347B00B9C3C6 /* AtomicValue+RangeReplaceableCollectionTests.swift */; };
+		FAA7A5A624C0CC8F00CA863F /* AmplifyOperation+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA7A5A524C0CC8F00CA863F /* AmplifyOperation+Combine.swift */; };
 		FAA98B02239214A30039EE71 /* DataStoreConflict.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA98B01239214A30039EE71 /* DataStoreConflict.swift */; };
 		FAA9FC3B23620CE50012638A /* URLRequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA9FC3A23620CE50012638A /* URLRequestInterceptor.swift */; };
 		FAA9FC3E236210840012638A /* APICategoryClientInterceptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA9FC3D236210840012638A /* APICategoryClientInterceptorTests.swift */; };
@@ -1168,6 +1170,7 @@
 		FA176ED823858A3800C5C5F9 /* Amplify+HubPayloadEventName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Amplify+HubPayloadEventName.swift"; sourceTree = "<group>"; };
 		FA176EDC2385943000C5C5F9 /* NotificationListeningAnalyticsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationListeningAnalyticsPlugin.swift; sourceTree = "<group>"; };
 		FA1846ED23998E43009B9D01 /* MockAPIResponders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAPIResponders.swift; sourceTree = "<group>"; };
+		FA1B964D24BF5FA70002B90A /* AmplifyOperationCombineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplifyOperationCombineTests.swift; sourceTree = "<group>"; };
 		FA2492462391A3BF0004B379 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		FA315294233D634900DE78E7 /* StorageDownloadFileRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StorageDownloadFileRequest.swift; path = Amplify/Categories/Storage/Request/StorageDownloadFileRequest.swift; sourceTree = SOURCE_ROOT; };
 		FA315297233D644F00DE78E7 /* StorageDownloadDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageDownloadDataRequest.swift; sourceTree = "<group>"; };
@@ -1232,6 +1235,7 @@
 		FAA64FC22397294500B9C3C6 /* ModelSchema+Attributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ModelSchema+Attributes.swift"; sourceTree = "<group>"; };
 		FAA64FC42397344D00B9C3C6 /* AtomicValue+RangeReplaceableCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AtomicValue+RangeReplaceableCollection.swift"; sourceTree = "<group>"; };
 		FAA64FC62397347B00B9C3C6 /* AtomicValue+RangeReplaceableCollectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AtomicValue+RangeReplaceableCollectionTests.swift"; sourceTree = "<group>"; };
+		FAA7A5A524C0CC8F00CA863F /* AmplifyOperation+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AmplifyOperation+Combine.swift"; sourceTree = "<group>"; };
 		FAA98B01239214A30039EE71 /* DataStoreConflict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStoreConflict.swift; sourceTree = "<group>"; };
 		FAA9FC3A23620CE50012638A /* URLRequestInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestInterceptor.swift; sourceTree = "<group>"; };
 		FAA9FC3D236210840012638A /* APICategoryClientInterceptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICategoryClientInterceptorTests.swift; sourceTree = "<group>"; };
@@ -2555,6 +2559,7 @@
 				FAAFAF3C2390D4A6002CF932 /* AmplifyErrorMessages.swift */,
 				FA5704C8245F3C6900392C19 /* AmplifyInProcessReportingOperation.swift */,
 				FA56F72622B14BF70039754A /* AmplifyOperation.swift */,
+				FAA7A5A524C0CC8F00CA863F /* AmplifyOperation+Combine.swift */,
 				FA5704CA245F58C600392C19 /* AmplifyOperation+Hub.swift */,
 				FAB9D810233BF5F600928AA9 /* AmplifyOperationContext.swift */,
 				21FFF986230B7A5D005878EA /* AsychronousOperation.swift */,
@@ -2909,6 +2914,7 @@
 			isa = PBXGroup;
 			children = (
 				FACA35EA2326B217000E74F6 /* AmplifyConfigurationInitializationTests.swift */,
+				FA1B964D24BF5FA70002B90A /* AmplifyOperationCombineTests.swift */,
 				B9DCA262240F217C00075E22 /* AnyEncodableTests.swift */,
 				FACF520823298C1200646E10 /* AtomicDictionaryTests.swift */,
 				FAAFAF3023904B75002CF932 /* AtomicValue+BoolTests.swift */,
@@ -4099,6 +4105,7 @@
 				FA315298233D644F00DE78E7 /* StorageDownloadDataRequest.swift in Sources */,
 				FA4E730A232828EA003B8EEB /* Amplify+Reset.swift in Sources */,
 				B4FA336624105DCD00E1C659 /* AuthCategory+ClientBehavior.swift in Sources */,
+				FAA7A5A624C0CC8F00CA863F /* AmplifyOperation+Combine.swift in Sources */,
 				FA6BC87B235F5D240001A882 /* APICategoryGraphQLBehavior.swift in Sources */,
 				FA6BC86B235F57920001A882 /* APIError.swift in Sources */,
 				B996FC4D24059918006D0F68 /* Model+Enum.swift in Sources */,
@@ -4438,6 +4445,7 @@
 				FAC2356A227A056600424678 /* LoggingCategoryConfigurationTests.swift in Sources */,
 				B91A87A423D64B0F0049A12F /* TemporalTests.swift in Sources */,
 				FA5D76AF23947E9C00489864 /* Model+CodableTests.swift in Sources */,
+				FA1B964E24BF5FA70002B90A /* AmplifyOperationCombineTests.swift in Sources */,
 				FAAFAF3323904BA4002CF932 /* AtomicValue+NumericTests.swift in Sources */,
 				FA176EDD2385943000C5C5F9 /* NotificationListeningAnalyticsPlugin.swift in Sources */,
 				FA47B8362350C2D60031A0E3 /* AutoUnsubscribeOperationTests.swift in Sources */,

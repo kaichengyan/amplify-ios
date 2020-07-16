@@ -16,18 +16,16 @@ class OperationTestBase: XCTestCase {
         Amplify.reset()
     }
 
-    func setUpPlugin(with factory: URLSessionBehaviorFactory? = nil) {
-        let apiPlugin: AWSAPIPlugin
-
-        if let factory = factory {
-            apiPlugin = AWSAPIPlugin(sessionFactory: factory)
-        } else {
-            apiPlugin = AWSAPIPlugin()
-        }
+    func setUpPlugin(
+        with factory: URLSessionBehaviorFactory? = nil,
+        endpointType: AWSAPICategoryPluginEndpointType
+    ) {
+        let apiPlugin = AWSAPIPlugin(sessionFactory: factory)
 
         let apiConfig = APICategoryConfiguration(plugins: [
             "awsAPIPlugin": [
                 "Valid": [
+                    "endpointType": .string(endpointType.rawValue),
                     "endpoint": "http://www.example.com",
                     "authorizationType": "API_KEY",
                     "apiKey": "SpecialApiKey33"

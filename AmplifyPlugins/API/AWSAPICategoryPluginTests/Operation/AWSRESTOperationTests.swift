@@ -33,7 +33,7 @@ class AWSRESTOperationTests: OperationTestBase {
     }
 
     func testGetReturnsOperation() {
-        setUpPlugin()
+        setUpPlugin(endpointType: .rest)
 
         let request = RESTRequest(apiName: "Valid", path: "/path")
         let operation = Amplify.API.get(request: request, listener: nil)
@@ -73,7 +73,7 @@ class AWSRESTOperationTests: OperationTestBase {
 
         let mockSession = MockURLSession(onTaskForRequest: { _ in task })
         let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory)
+        setUpPlugin(with: factory, endpointType: .rest)
 
         let callbackInvoked = expectation(description: "Callback was invoked")
         let request = RESTRequest(apiName: "INVALID_API_NAME", path: "/path")
@@ -119,7 +119,7 @@ class AWSRESTOperationTests: OperationTestBase {
 
         let mockSession = MockURLSession(onTaskForRequest: { _ in task })
         let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory)
+        setUpPlugin(with: factory, endpointType: .rest)
 
         let callbackInvoked = expectation(description: "Callback was invoked")
         let request = RESTRequest(apiName: "Valid", path: "/path")

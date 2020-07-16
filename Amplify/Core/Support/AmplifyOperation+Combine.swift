@@ -9,7 +9,27 @@ import Combine
 import Foundation
 
 @available(iOS 13.0, *)
-public extension AmplifyOperation {
+public protocol ResultPublisher {
+    associatedtype Success
+    associatedtype Failure: AmplifyError
+
+    /// A Publisher that emits the result of the operation, or the associated failure. Cancelled operations will
+    /// emit a completion without a value as long as the cancellation was received before the operation was resolved.
+    var resultPublisher: AnyPublisher<Success, Failure> { get }
+}
+
+@available(iOS 13.0, *)
+extension AmplifyOperation: ResultPublisher {
+    /// A Publisher that emits the result of the operation, or the associated failure. Cancelled operations will
+    /// emit a completion without a value as long as the cancellation was received before the operation was resolved.
+    public var resultPublisher: AnyPublisher<Success, Failure> {
+        // We set this value in the initializer, so it's safe to force-unwrap and force-cast here
+        // swiftlint:disable:next force_cast
+        let future = resultFuture as! Future<Success, Failure>
+        return future
+            .catch(interceptCancellation)
+            .eraseToAnyPublisher()
+    }
 
     /// Publish the result of the operation
     ///
@@ -19,17 +39,6 @@ public extension AmplifyOperation {
         // swiftlint:disable:next force_cast
         let promise = resultPromise as! Future<Success, Failure>.Promise
         promise(result)
-    }
-
-    /// A Publisher that emits the result of the operation, or the associated failure. Cancelled operations will
-    /// emit a completion without a value as long as the cancellation was received before the operation was resolved.
-    var resultPublisher: AnyPublisher<Success, Failure> {
-        // We set this value in the initializer, so it's safe to force-unwrap and force-cast here
-        // swiftlint:disable:next force_cast
-        let future = resultFuture as! Future<Success, Failure>
-        return future
-            .catch(interceptCancellation)
-            .eraseToAnyPublisher()
     }
 
     /// Utility method to help Swift type-cast the handling logic for cancellation errors vs. re-thrown errors. The

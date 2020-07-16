@@ -132,8 +132,10 @@
 		B4DFA5F9237A611D0013E17B /* AWSAPICategoryPlugin+URLSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFA5DF237A611D0013E17B /* AWSAPICategoryPlugin+URLSessionDelegateTests.swift */; };
 		FA8EE785238632620097E4F1 /* AWSAPIPlugin+Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8EE784238632620097E4F1 /* AWSAPIPlugin+Log.swift */; };
 		FA97F5532386CCF500EE9EFE /* AnyModelIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA97F5522386CCF500EE9EFE /* AnyModelIntegrationTests.swift */; };
+		FAA7A5A824C0DE1900CA863F /* RESTCombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA7A5A724C0DE1900CA863F /* RESTCombineTests.swift */; };
 		FAA7A5AA24C0E01500CA863F /* AWSGraphQLSubscriptionOperationCancelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA7A5A924C0E01500CA863F /* AWSGraphQLSubscriptionOperationCancelTests.swift */; };
 		FAC5F9B1238B70EE00F70F02 /* APICategoryPluginConcurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9554DF238B6C0B00D42A43 /* APICategoryPluginConcurrencyTests.swift */; };
+		FADC469524C0E8AF00EF447B /* GraphQLCombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADC469424C0E8AF00EF447B /* GraphQLCombineTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -444,7 +446,9 @@
 		FA8EE784238632620097E4F1 /* AWSAPIPlugin+Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AWSAPIPlugin+Log.swift"; sourceTree = "<group>"; };
 		FA9554DF238B6C0B00D42A43 /* APICategoryPluginConcurrencyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICategoryPluginConcurrencyTests.swift; sourceTree = "<group>"; };
 		FA97F5522386CCF500EE9EFE /* AnyModelIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyModelIntegrationTests.swift; sourceTree = "<group>"; };
+		FAA7A5A724C0DE1900CA863F /* RESTCombineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RESTCombineTests.swift; sourceTree = "<group>"; };
 		FAA7A5A924C0E01500CA863F /* AWSGraphQLSubscriptionOperationCancelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSGraphQLSubscriptionOperationCancelTests.swift; sourceTree = "<group>"; };
+		FADC469424C0E8AF00EF447B /* GraphQLCombineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLCombineTests.swift; sourceTree = "<group>"; };
 		FC6404420A9C03FAB55FA8B3 /* Pods-AWSAPICategoryPluginGraphQLAPIKeyIntegrationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AWSAPICategoryPluginGraphQLAPIKeyIntegrationTests.debug.xcconfig"; path = "Target Support Files/Pods-AWSAPICategoryPluginGraphQLAPIKeyIntegrationTests/Pods-AWSAPICategoryPluginGraphQLAPIKeyIntegrationTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -934,6 +938,7 @@
 				B4DFA5DF237A611D0013E17B /* AWSAPICategoryPlugin+URLSessionDelegateTests.swift */,
 				B4DFA5CB237A611D0013E17B /* AWSAPICategoryPluginTestBase.swift */,
 				FAA7A5A924C0E01500CA863F /* AWSGraphQLSubscriptionOperationCancelTests.swift */,
+				FADC469324C0E86C00EF447B /* Combine Tests */,
 				B4DFA5C6237A611D0013E17B /* Configuration */,
 				B4DFA5D9237A611D0013E17B /* Interceptor */,
 				B4DFA5BF237A611D0013E17B /* Mocks */,
@@ -1072,6 +1077,15 @@
 				21D7A0DE237B54D90057D00D /* Info.plist */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		FADC469324C0E86C00EF447B /* Combine Tests */ = {
+			isa = PBXGroup;
+			children = (
+				FADC469424C0E8AF00EF447B /* GraphQLCombineTests.swift */,
+				FAA7A5A724C0DE1900CA863F /* RESTCombineTests.swift */,
+			);
+			path = "Combine Tests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1303,7 +1317,7 @@
 		B478F5F22374DBF400C4F92B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1130;
+				LastSwiftUpdateCheck = 1150;
 				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = "Amazon Web Services";
 				TargetAttributes = {
@@ -2194,9 +2208,11 @@
 				B4DFA5F8237A611D0013E17B /* AWSAPICategoryPlugin+ConfigureTests.swift in Sources */,
 				21E2E22A2451E6B5007D7767 /* GraphQLResponseDecoderDecodeErrorTests.swift in Sources */,
 				B4DFA5F1237A611D0013E17B /* AWSAPICategoryPlugin+URLSessionBehaviorDelegateTests.swift in Sources */,
+				FAA7A5A824C0DE1900CA863F /* RESTCombineTests.swift in Sources */,
 				B4DFA5E7237A611D0013E17B /* AWSAPICategoryPlugin+InterceptorBehaviorTests.swift in Sources */,
 				6B33896E23AABEEE00561E5B /* MockReachability.swift in Sources */,
 				B4DFA5E4237A611D0013E17B /* AWSRESTOperationTests.swift in Sources */,
+				FADC469524C0E8AF00EF447B /* GraphQLCombineTests.swift in Sources */,
 				B4DFA5E3237A611D0013E17B /* AWSGraphQLOperationTests.swift in Sources */,
 				B4DFA5F9237A611D0013E17B /* AWSAPICategoryPlugin+URLSessionDelegateTests.swift in Sources */,
 				B4DFA5EC237A611D0013E17B /* GraphQLRequestUtils+ValidatorTests.swift in Sources */,
@@ -2804,7 +2820,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = HostApp/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2823,7 +2839,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = HostApp/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

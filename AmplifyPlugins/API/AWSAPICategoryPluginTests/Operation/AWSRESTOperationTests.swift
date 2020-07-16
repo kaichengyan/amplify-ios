@@ -10,13 +10,7 @@ import XCTest
 @testable import AmplifyTestCommon
 @testable import AWSAPICategoryPlugin
 
-class AWSRESTOperationTests: XCTestCase {
-
-    override func setUp() {
-    }
-
-    override func tearDown() {
-    }
+class AWSRESTOperationTests: OperationTestBase {
 
     func testRESTOperationSuccess() {
         XCTFail("Not yet implemented.")
@@ -38,10 +32,7 @@ class AWSRESTOperationTests: XCTestCase {
         XCTFail("Not yet implemented.")
     }
 
-    // TODO: Move over to operation test
-
     func testGetReturnsOperation() {
-        Amplify.reset()
         setUpPlugin()
 
         let request = RESTRequest(apiName: "Valid", path: "/path")
@@ -58,8 +49,6 @@ class AWSRESTOperationTests: XCTestCase {
     }
 
     func testGetFailsWithBadAPIName() {
-        Amplify.reset()
-
         let sentData = Data([0x00, 0x01, 0x02, 0x03])
 
         var mockTask: MockURLSessionTask?
@@ -106,8 +95,6 @@ class AWSRESTOperationTests: XCTestCase {
     /// - When: I invoke `APICategory.get(apiName:path:listener:)`
     /// - Then: The listener is invoked with the successful value
     func testGetReturnsValue() {
-        Amplify.reset()
-
         let sentData = Data([0x00, 0x01, 0x02, 0x03])
 
         var mockTask: MockURLSessionTask?
@@ -149,35 +136,4 @@ class AWSRESTOperationTests: XCTestCase {
         wait(for: [callbackInvoked], timeout: 1.0)
     }
 
-    // MARK: - Utilities
-
-    func setUpPlugin(with factory: URLSessionBehaviorFactory? = nil) {
-        let apiPlugin: AWSAPIPlugin
-
-        if let factory = factory {
-            apiPlugin = AWSAPIPlugin(sessionFactory: factory)
-        } else {
-            apiPlugin = AWSAPIPlugin()
-        }
-
-        let apiConfig = APICategoryConfiguration(plugins: [
-            "awsAPIPlugin": [
-                "Valid": [
-                    "endpoint": "http://www.example.com",
-                    "authorizationType": "API_KEY",
-                    "apiKey": "SpecialApiKey33"
-                ]
-            ]
-        ])
-
-        let amplifyConfig = AmplifyConfiguration(api: apiConfig)
-
-        do {
-            try Amplify.add(plugin: apiPlugin)
-            try Amplify.configure(amplifyConfig)
-        } catch {
-            continueAfterFailure = false
-            XCTFail("Error during setup: \(error)")
-        }
-    }
 }

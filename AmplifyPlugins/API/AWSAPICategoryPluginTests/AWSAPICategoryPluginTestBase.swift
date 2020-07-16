@@ -30,7 +30,9 @@ class AWSAPICategoryPluginTestBase: XCTestCase {
     let testPath = "testPath"
 
     override func setUp() {
-        apiPlugin = AWSAPIPlugin()
+        apiPlugin = AWSAPIPlugin(
+//            sessionFactory: URLSessionBehaviorFactory?
+        )
         authService = MockAWSAuthService()
         do {
             let endpointConfig = [apiName: try AWSAPICategoryPluginConfiguration.EndpointConfig(

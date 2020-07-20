@@ -17,31 +17,111 @@ class OperationTestBase: XCTestCase {
     }
 
     func setUpPlugin(
-        with factory: URLSessionBehaviorFactory? = nil,
+        sessionFactory: URLSessionBehaviorFactory? = nil,
+        subscriptionConnectionFactory: SubscriptionConnectionFactory? = nil,
         endpointType: AWSAPICategoryPluginEndpointType
-    ) {
-        let apiPlugin = AWSAPIPlugin(sessionFactory: factory)
+    ) throws {
+        let apiPlugin = AWSAPIPlugin(sessionFactory: sessionFactory)
 
-        let apiConfig = APICategoryConfiguration(plugins: [
-            "awsAPIPlugin": [
-                "Valid": [
-                    "endpointType": .string(endpointType.rawValue),
-                    "endpoint": "http://www.example.com",
-                    "authorizationType": "API_KEY",
-                    "apiKey": "SpecialApiKey33"
-                ]
+        let configurationValues: JSONValue = [
+            "Valid": [
+                "endpointType": .string(endpointType.rawValue),
+                "endpoint": "http://www.example.com",
+                "authorizationType": "API_KEY",
+                "apiKey": "SpecialApiKey33"
             ]
-        ])
+        ]
 
-        let amplifyConfig = AmplifyConfiguration(api: apiConfig)
+        let dependencies = try AWSAPIPlugin.ConfigurationDependencies(
+            configurationValues: configurationValues,
+            authService: MockAWSAuthService(),
+            subscriptionConnectionFactory: subscriptionConnectionFactory
+        )
+
+        apiPlugin.configure(using: dependencies)
 
         do {
+            // Note that we're configuring Amplify first, then adding the pre-configured plugin. This is a
+            // hack to let us assign the mock dependencies to the plugin without having it overwritten by
+            // a subsequent call to `Amplify.configure()`.
+            // TODO: Refactor plugin configuration to allow dependencies to be passed in at plugin init
+            try Amplify.configure(AmplifyConfiguration())
             try Amplify.add(plugin: apiPlugin)
-            try Amplify.configure(amplifyConfig)
         } catch {
             continueAfterFailure = false
             XCTFail("Error during setup: \(error)")
         }
+    }
+
+    func setUpPluginForSingleResponse(
+        sending data: Data,
+        for endpointType: AWSAPICategoryPluginEndpointType
+    ) throws {
+        let task = try makeSingleValueSuccessMockTask(sending: data)
+        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
+        let sessionFactory = MockSessionFactory(returning: mockSession)
+        try setUpPlugin(sessionFactory: sessionFactory, endpointType: endpointType)
+    }
+
+    func setUpPluginForSingleError(for endpointType: AWSAPICategoryPluginEndpointType) throws {
+        let task = try makeSingleValueErrorMockTask()
+        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
+        let sessionFactory = MockSessionFactory(returning: mockSession)
+        try setUpPlugin(sessionFactory: sessionFactory, endpointType: endpointType)
+    }
+
+    func setUpPluginForSubscriptionResponse() throws {
+        let subscriptionConnectionFactory = MockSubscriptionConnectionFactory()
+        try setUpPlugin(
+            subscriptionConnectionFactory: subscriptionConnectionFactory,
+            endpointType: .graphQL
+        )
+    }
+
+    func makeSingleValueSuccessMockTask(sending data: Data) throws -> MockURLSessionTask {
+        var mockTask: MockURLSessionTask!
+        mockTask = MockURLSessionTask(onResume: {
+            guard let mockSession = mockTask.mockSession,
+                let delegate = mockSession.sessionBehaviorDelegate
+                else {
+                    return
+            }
+
+            delegate.urlSessionBehavior(mockSession,
+                                        dataTaskBehavior: mockTask,
+                                        didReceive: data)
+
+            delegate.urlSessionBehavior(mockSession,
+                                        dataTaskBehavior: mockTask,
+                                        didCompleteWithError: nil)
+        })
+
+        guard let task = mockTask else {
+            throw "mockTask unexpectedly nil"
+        }
+
+        return task
+    }
+
+    func makeSingleValueErrorMockTask() throws -> MockURLSessionTask {
+        var mockTask: MockURLSessionTask!
+        mockTask = MockURLSessionTask(onResume: {
+            guard let mockSession = mockTask.mockSession,
+                let delegate = mockSession.sessionBehaviorDelegate
+                else {
+                    return
+            }
+
+            delegate.urlSessionBehavior(mockSession,
+                                        dataTaskBehavior: mockTask,
+                                        didCompleteWithError: URLError(.badServerResponse))
+        })
+
+        guard let task = mockTask else {
+            throw "mockTask unexpectedly nil"
+        }
+
+        return task
     }
 
 }

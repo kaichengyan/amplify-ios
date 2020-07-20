@@ -15,35 +15,10 @@ import XCTest
 class GraphQLMutateCombineTests: OperationTestBase {
     let testDocument = "mutate { updateTodo { id name description }}"
 
-    func testMutateSucceeds() {
+    func testMutateSucceeds() throws {
         let testJSONData: JSONValue = ["foo": true]
         let sentData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: nil)
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .graphQL)
+        try setUpPluginForSingleResponse(sending: sentData, for: .graphQL)
 
         let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
 
@@ -77,34 +52,9 @@ class GraphQLMutateCombineTests: OperationTestBase {
         sink.cancel()
     }
 
-    func testMutateHandlesResponseError() {
+    func testMutateHandlesResponseError() throws {
         let sentData = #"{"data": {"foo": true}, "errors": []}"# .data(using: .utf8)!
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: nil)
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .graphQL)
+        try setUpPluginForSingleResponse(sending: sentData, for: .graphQL)
 
         let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
 
@@ -138,34 +88,8 @@ class GraphQLMutateCombineTests: OperationTestBase {
 
     }
 
-    func testMutateFails() {
-        let sentData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: URLError(.badServerResponse))
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .graphQL)
+    func testMutateFails() throws {
+        try setUpPluginForSingleError(for: .graphQL)
 
         let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
 
@@ -199,34 +123,9 @@ class GraphQLMutateCombineTests: OperationTestBase {
         sink.cancel()
     }
 
-    func testMutateCancels() {
+    func testMutateCancels() throws {
         let sentData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: URLError(.badServerResponse))
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .graphQL)
+        try setUpPluginForSingleResponse(sending: sentData, for: .graphQL)
 
         let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
 

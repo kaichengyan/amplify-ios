@@ -14,34 +14,9 @@ import XCTest
 @available(iOS 13.0, *)
 class RESTCombineTests: OperationTestBase {
 
-    func testGetSucceeds() {
+    func testGetSucceeds() throws {
         let sentData = Data([0x00, 0x01, 0x02, 0x03])
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: nil)
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .rest)
+        try setUpPluginForSingleResponse(sending: sentData, for: .graphQL)
 
         let request = RESTRequest(apiName: "Valid", path: "/path")
 
@@ -68,30 +43,9 @@ class RESTCombineTests: OperationTestBase {
         sink.cancel()
     }
 
-    func testGetFails() {
+    func testGetFails() throws {
         let sentData = Data([0x00, 0x01, 0x02, 0x03])
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: URLError.init(.badURL))
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .rest)
+        try setUpPluginForSingleError(for: .graphQL)
 
         let request = RESTRequest(apiName: "Valid", path: "/path")
 
@@ -119,34 +73,9 @@ class RESTCombineTests: OperationTestBase {
         sink.cancel()
     }
 
-    func testGetCancels() {
+    func testGetCancels() throws {
         let sentData = Data([0x00, 0x01, 0x02, 0x03])
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: nil)
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .rest)
+        try setUpPluginForSingleResponse(sending: sentData, for: .graphQL)
 
         let request = RESTRequest(apiName: "Valid", path: "/path")
 

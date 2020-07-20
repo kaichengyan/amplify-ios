@@ -67,6 +67,9 @@
                <Test
                   Identifier = "AWSRESTOperationTests/testRESTOperationValidationError()">
                </Test>
+               <Test
+                  Identifier = "GraphQLSubscribeCombineTests">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>

@@ -13,37 +13,12 @@ import XCTest
 
 @available(iOS 13.0, *)
 class GraphQLSubscribeCombineTests: OperationTestBase {
-    let testDocument = "query { getTodo { id name description }}"
+    let testDocument = "subscribe { subscribeTodos { id name description }}"
 
-    func testQuerySucceeds() {
+    func testSubscribeResultSucceeds() throws {
         let testJSONData: JSONValue = ["foo": true]
         let sentData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: nil)
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .graphQL)
+        try setUpPluginForSubscriptionResponse()
 
         let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
 
@@ -54,202 +29,35 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         let receivedFailure = expectation(description: "Received failed")
         receivedFailure.isInverted = true
 
-        let sink = Amplify.API.query(request: request)
+        let sink = Amplify.API.subscribe(request: request)
             .resultPublisher
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    receivedFailure.fulfill()
-                case .finished:
-                    receivedFinish.fulfill()
-                }
-            }, receiveValue: { queryResult in
-                switch queryResult {
-                case .success(let jsonValue):
-                    XCTAssertEqual(jsonValue, testJSONData)
-                    receivedValue.fulfill()
-                case .failure:
-                    receivedResponseError.fulfill()
-                }
-            })
+            .sink(
+                receiveCompletion: { print($0) },
+                receiveValue: { print($0) }
+        )
 
         waitForExpectations(timeout: 0.05)
         sink.cancel()
     }
 
-    func testQueryHandlesResponseError() {
-        let sentData = #"{"data": {"foo": true}, "errors": []}"# .data(using: .utf8)!
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: nil)
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .graphQL)
-
-        let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
-
-        let receivedValue = expectation(description: "Received value")
-        receivedValue.isInverted = true
-        let receivedResponseError = expectation(description: "Received response error")
-        let receivedFinish = expectation(description: "Received finished")
-        let receivedFailure = expectation(description: "Received failed")
-        receivedFailure.isInverted = true
-
-        let sink = Amplify.API.query(request: request)
-            .resultPublisher
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    receivedFailure.fulfill()
-                case .finished:
-                    receivedFinish.fulfill()
-                }
-            }, receiveValue: { queryResult in
-                switch queryResult {
-                case .success:
-                    receivedValue.fulfill()
-                case .failure:
-                    receivedResponseError.fulfill()
-                }
-            })
-
-        waitForExpectations(timeout: 0.05)
-        sink.cancel()
-
+    func testSubscribeSuccessEvent() {
+        XCTFail("Not yet implemented")
     }
 
-    func testQueryFails() {
-        let sentData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
-
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: URLError(.badServerResponse))
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .graphQL)
-
-        let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
-
-        let receivedValue = expectation(description: "Received value")
-        receivedValue.isInverted = true
-        let receivedResponseError = expectation(description: "Received response error")
-        receivedResponseError.isInverted = true
-        let receivedFinish = expectation(description: "Received finished")
-        receivedFinish.isInverted = true
-        let receivedFailure = expectation(description: "Received failed")
-
-        let sink = Amplify.API.query(request: request)
-            .resultPublisher
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    receivedFailure.fulfill()
-                case .finished:
-                    receivedFinish.fulfill()
-                }
-            }, receiveValue: { queryResult in
-                switch queryResult {
-                case .success:
-                    receivedValue.fulfill()
-                case .failure:
-                    receivedResponseError.fulfill()
-                }
-            })
-
-        waitForExpectations(timeout: 0.05)
-        sink.cancel()
+    func testSubscribeEventHandlesResponseError() {
+        XCTFail("Not yet implemented")
     }
 
-    func testQueryCancels() {
-        let sentData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
+    func testSubscribeResultFails() {
+        XCTFail("Not yet implemented")
+    }
 
-        var mockTask: MockURLSessionTask!
-        mockTask = MockURLSessionTask(onResume: {
-            guard let mockSession = mockTask.mockSession,
-                let delegate = mockSession.sessionBehaviorDelegate
-                else {
-                    return
-            }
+    func testSubscribeInProcessCancels() {
+        XCTFail("Not yet implemented")
+    }
 
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didReceive: sentData)
-
-            delegate.urlSessionBehavior(mockSession,
-                                        dataTaskBehavior: mockTask,
-                                        didCompleteWithError: URLError(.badServerResponse))
-        })
-
-        guard let task = mockTask else {
-            XCTFail("mockTask unexpectedly nil")
-            return
-        }
-
-        let mockSession = MockURLSession(onTaskForRequest: { _ in task })
-        let factory = MockSessionFactory(returning: mockSession)
-        setUpPlugin(with: factory, endpointType: .graphQL)
-
-        let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
-
-        let receivedFinish = expectation(description: "Received finished")
-        let receivedFailure = expectation(description: "Received failed")
-        receivedFailure.isInverted = true
-
-        let operation = Amplify.API.query(request: request)
-        let sink = operation
-            .resultPublisher
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    receivedFailure.fulfill()
-                case .finished:
-                    receivedFinish.fulfill()
-                }
-            }, receiveValue: { _ in })
-
-        operation.cancel()
-
-        waitForExpectations(timeout: 0.05)
-        sink.cancel()
+    func testSubscribeResultCancels() {
+        XCTFail("Not yet implemented")
     }
 
 }

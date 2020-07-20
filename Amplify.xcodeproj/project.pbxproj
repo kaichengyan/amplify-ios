@@ -382,6 +382,9 @@
 		FA176EDD2385943000C5C5F9 /* NotificationListeningAnalyticsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA176EDC2385943000C5C5F9 /* NotificationListeningAnalyticsPlugin.swift */; };
 		FA1846EE23998E44009B9D01 /* MockAPIResponders.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1846ED23998E43009B9D01 /* MockAPIResponders.swift */; };
 		FA1B964E24BF5FA70002B90A /* AmplifyOperationCombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1B964D24BF5FA70002B90A /* AmplifyOperationCombineTests.swift */; };
+		FA249EE724C5FA4A009B3CE8 /* AmplifyInProcessReportingOperation+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA249EE624C5FA49009B3CE8 /* AmplifyInProcessReportingOperation+Combine.swift */; };
+		FA249EE924C5FE39009B3CE8 /* AmplifyAPICategory+RESTBehavior+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA249EE824C5FE39009B3CE8 /* AmplifyAPICategory+RESTBehavior+Combine.swift */; };
+		FA249EEB24C5FE66009B3CE8 /* AmplifyAPICategory+GraphQLBehavior+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA249EEA24C5FE66009B3CE8 /* AmplifyAPICategory+GraphQLBehavior+Combine.swift */; };
 		FA315295233D634900DE78E7 /* StorageDownloadFileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA315294233D634900DE78E7 /* StorageDownloadFileRequest.swift */; };
 		FA315298233D644F00DE78E7 /* StorageDownloadDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA315297233D644F00DE78E7 /* StorageDownloadDataRequest.swift */; };
 		FA31529A233D645200DE78E7 /* StorageGetURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA315299233D645200DE78E7 /* StorageGetURLRequest.swift */; };
@@ -1172,6 +1175,9 @@
 		FA1846ED23998E43009B9D01 /* MockAPIResponders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAPIResponders.swift; sourceTree = "<group>"; };
 		FA1B964D24BF5FA70002B90A /* AmplifyOperationCombineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplifyOperationCombineTests.swift; sourceTree = "<group>"; };
 		FA2492462391A3BF0004B379 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		FA249EE624C5FA49009B3CE8 /* AmplifyInProcessReportingOperation+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AmplifyInProcessReportingOperation+Combine.swift"; sourceTree = "<group>"; };
+		FA249EE824C5FE39009B3CE8 /* AmplifyAPICategory+RESTBehavior+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AmplifyAPICategory+RESTBehavior+Combine.swift"; sourceTree = "<group>"; };
+		FA249EEA24C5FE66009B3CE8 /* AmplifyAPICategory+GraphQLBehavior+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AmplifyAPICategory+GraphQLBehavior+Combine.swift"; sourceTree = "<group>"; };
 		FA315294233D634900DE78E7 /* StorageDownloadFileRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StorageDownloadFileRequest.swift; path = Amplify/Categories/Storage/Request/StorageDownloadFileRequest.swift; sourceTree = SOURCE_ROOT; };
 		FA315297233D644F00DE78E7 /* StorageDownloadDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageDownloadDataRequest.swift; sourceTree = "<group>"; };
 		FA315299233D645200DE78E7 /* StorageGetURLRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageGetURLRequest.swift; sourceTree = "<group>"; };
@@ -2558,6 +2564,7 @@
 				FAC23539227A055200424678 /* AmplifyError.swift */,
 				FAAFAF3C2390D4A6002CF932 /* AmplifyErrorMessages.swift */,
 				FA5704C8245F3C6900392C19 /* AmplifyInProcessReportingOperation.swift */,
+				FA249EE624C5FA49009B3CE8 /* AmplifyInProcessReportingOperation+Combine.swift */,
 				FA56F72622B14BF70039754A /* AmplifyOperation.swift */,
 				FAA7A5A524C0CC8F00CA863F /* AmplifyOperation+Combine.swift */,
 				FA5704CA245F58C600392C19 /* AmplifyOperation+Hub.swift */,
@@ -2619,9 +2626,11 @@
 			isa = PBXGroup;
 			children = (
 				FAC428A1235F80000000F221 /* AmplifyAPICategory+GraphQLBehavior.swift */,
+				FA249EEA24C5FE66009B3CE8 /* AmplifyAPICategory+GraphQLBehavior+Combine.swift */,
 				FAC428A3235F802A0000F221 /* AmplifyAPICategory+InterceptorBehavior.swift */,
 				6B767FB623AC092800C683ED /* AmplifyAPICategory+ReachabilityBehavior.swift */,
 				FAC4289F235F7F980000F221 /* AmplifyAPICategory+RESTBehavior.swift */,
+				FA249EE824C5FE39009B3CE8 /* AmplifyAPICategory+RESTBehavior+Combine.swift */,
 				FAC234FC227A053D00424678 /* APICategoryBehavior.swift */,
 				FA6BC87A235F5D240001A882 /* APICategoryGraphQLBehavior.swift */,
 				FA6BC87E235F5DAE0001A882 /* APICategoryInterceptorBehavior.swift */,
@@ -4217,6 +4226,7 @@
 				FA8EE781238628490097E4F1 /* Persistable.swift in Sources */,
 				B9485E9723F40848009C4F93 /* Time+Operation.swift in Sources */,
 				FA5BF25F2385A0500070C843 /* Category+Logging.swift in Sources */,
+				FA249EE724C5FA4A009B3CE8 /* AmplifyInProcessReportingOperation+Combine.swift in Sources */,
 				FACBA78D23949588006349C8 /* Model+DateFormatting.swift in Sources */,
 				FADB3A6823612940006D6FE9 /* BasicClosure.swift in Sources */,
 				FAAFAF3D2390D4A6002CF932 /* AmplifyErrorMessages.swift in Sources */,
@@ -4248,6 +4258,7 @@
 				FACBAD512386101F00E29E56 /* MutationEvent+MutationType.swift in Sources */,
 				FA6BC86D235F5AE30001A882 /* APICategory+HubPayloadEventName.swift in Sources */,
 				FAC23591227A4AF000424678 /* HubCategoryBehavior.swift in Sources */,
+				FA249EE924C5FE39009B3CE8 /* AmplifyAPICategory+RESTBehavior+Combine.swift in Sources */,
 				210DBC122332B3C0009B9E51 /* StorageDownloadFileOperation.swift in Sources */,
 				21FFF98E230C81E6005878EA /* StorageAccessLevel.swift in Sources */,
 				95DAAB4A237E639E0028544F /* InterpretResult.swift in Sources */,
@@ -4378,6 +4389,7 @@
 				B4251A0124250369007F59EF /* AuthConfirmResetPasswordRequest.swift in Sources */,
 				FAAFAF2F23904B14002CF932 /* AtomicValue+Bool.swift in Sources */,
 				B9B50DC823DA15890086F1E1 /* DataStoreError+Temporal.swift in Sources */,
+				FA249EEB24C5FE66009B3CE8 /* AmplifyAPICategory+GraphQLBehavior+Combine.swift in Sources */,
 				FACD26502386E9410068FBE6 /* JSONValue+Subscript.swift in Sources */,
 				B450741324115C260098F02D /* AuthSignInRequest.swift in Sources */,
 				B4FA336A24105EB700E1C659 /* AuthCategoryConfiguration.swift in Sources */,

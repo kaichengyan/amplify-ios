@@ -24,17 +24,9 @@ open class AmplifyInProcessReportingOperation<
     var inProcessListenerUnsubscribeToken: UnsubscribeToken?
 
     /// Local storage for the result publisher associated with this operation. In iOS 13 and higher, this is initialized
-    /// to be a `PassthroughSubject<InProcess, Failure>`. In versions of iOS prior to 13, this is initialized to
-    /// `false`.
-    private var _inProcessSubject: Any
-
-    @available(iOS 13.0, *)
-    public var inProcessPublisher: AnyPublisher<InProcess, Failure> {
-        // We set this value in the initializer of, so it's safe to force-unwrap here
-        // swiftlint:disable:next force_cast
-        let subject = _inProcessSubject as! PassthroughSubject<InProcess, Failure>
-        return subject.eraseToAnyPublisher()
-    }
+    /// to be a `PassthroughSubject<InProcess, Never>`. In versions of iOS prior to 13, this is initialized to
+    /// `false`. We derive the `inProcessPublisher` computed property from this value.
+    var inProcessSubject: Any
 
     public init(categoryType: CategoryType,
                 eventName: HubPayloadEventName,
@@ -42,19 +34,12 @@ open class AmplifyInProcessReportingOperation<
                 inProcessListener: InProcessListener? = nil,
                 resultListener: ResultListener? = nil) {
 
-        if #available(iOS 13.0, *) {
-            _inProcessSubject = PassthroughSubject<InProcess, Failure>()
-        } else {
-            self._inProcessSubject = false
-        }
+        self.inProcessSubject = false
 
         super.init(categoryType: categoryType, eventName: eventName, request: request, resultListener: resultListener)
 
         if #available(iOS 13.0, *) {
-            // We assign this immediately above, so we know it's safe to force-unwrap here
-            // swiftlint:disable:next force_cast
-            let subject = _inProcessSubject as! PassthroughSubject<InProcess, Failure>
-            subscribe(inProcessSubject: subject)
+            inProcessSubject = PassthroughSubject<InProcess, Never>()
         }
 
         // If the inProcessListener is present, we need to register a hub event listener for it, and ensure we
@@ -92,6 +77,14 @@ open class AmplifyInProcessReportingOperation<
         return inProcessListenerToken
     }
 
+    /// Classes that override this method must emit a completion to the `inProcessPublisher` upon cancellation
+    open override func cancel() {
+        super.cancel()
+        if #available(iOS 13.0, *) {
+            publish(completion: .finished)
+        }
+    }
+
 }
 
 public extension AmplifyInProcessReportingOperation {
@@ -102,6 +95,10 @@ public extension AmplifyInProcessReportingOperation {
     /// operation's `id`, and `request`
     /// - Parameter result: The OperationResult to dispatch to the hub as part of the HubPayload
     func dispatchInProcess(data: InProcess) {
+        if #available(iOS 13.0, *) {
+            publish(inProcessValue: data)
+        }
+
         let channel = HubChannel(from: categoryType)
         let context = AmplifyOperationContext(operationId: id, request: request)
         let payload = HubPayload(eventName: eventName, context: context, data: data)
@@ -115,41 +112,4 @@ public extension AmplifyInProcessReportingOperation {
         }
     }
 
-}
-
-@available(iOS 13.0, *)
-private extension AmplifyInProcessReportingOperation {
-    /// Subscribe a subject to this operation's Hub events. Once a result (as opposed to an in-process value) is
-    /// received, unsubscribes from the Hub listener and sends a completion to the subject.
-    ///
-    /// - Parameter subject: A Subject to receive a Hub result for this operation
-    func subscribe<S>(inProcessSubject: S) where S: Subject, S.Output == InProcess, S.Failure == Failure {
-        let channel = HubChannel(from: categoryType)
-        let filterById = HubFilters.forOperation(self)
-
-        var inProcessListenerToken: UnsubscribeToken!
-        let inProcessHubListener: HubListener = { payload in
-            if let inProcessData = payload.data as? InProcess {
-                inProcessSubject.send(inProcessData)
-                return
-            }
-
-            guard let result = payload.data as? OperationResult else {
-                return
-            }
-
-            switch result {
-            case .success:
-                inProcessSubject.send(completion: .finished)
-            case .failure(let error):
-                inProcessSubject.send(completion: .failure(error))
-            }
-
-            Amplify.Hub.removeListener(inProcessListenerToken)
-        }
-
-        inProcessListenerToken = Amplify.Hub.listen(to: channel,
-                                                    isIncluded: filterById,
-                                                    listener: inProcessHubListener)
-    }
 }

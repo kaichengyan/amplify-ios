@@ -9,17 +9,7 @@ import Combine
 import Foundation
 
 @available(iOS 13.0, *)
-public protocol ResultPublisher {
-    associatedtype Success
-    associatedtype Failure: AmplifyError
-
-    /// A Publisher that emits the result of the operation, or the associated failure. Cancelled operations will
-    /// emit a completion without a value as long as the cancellation was received before the operation was resolved.
-    var resultPublisher: AnyPublisher<Success, Failure> { get }
-}
-
-@available(iOS 13.0, *)
-extension AmplifyOperation: ResultPublisher {
+extension AmplifyOperation {
     /// A Publisher that emits the result of the operation, or the associated failure. Cancelled operations will
     /// emit a completion without a value as long as the cancellation was received before the operation was resolved.
     public var resultPublisher: AnyPublisher<Success, Failure> {

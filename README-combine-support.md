@@ -150,3 +150,37 @@ func cancelUpload() {
 ```
 
 If you navigate away from `MyView`, the `uploadOperation`, `resultSink`, and `progressSink` instance variables will be released, and you will no longer receive progress or result updates on those sinks, but Amplify will continue to process the upload operation.
+
+## Examples
+
+### `API.get`
+
+```swift
+operation = Amplify.API.get(request: request)
+sink = operation
+    .resultPublisher
+    .sink(receiveCompletion: {
+        if case .failure(let apiError) = $0 {
+            print("Error uploading: \(apiError)")
+        }
+    }, receiveValue: { print("Data received: \($0)") }
+)
+```
+
+### `API.subscribe`
+
+```swift
+operation = Amplify.API.subscribe(request: request)
+sink = operation
+    .resultPublisher
+    .sink(receiveCompletion: {
+        if case .failure(let apiError) = $0 {
+            print("Error uploading: \(apiError)")
+        }
+    }, receiveValue: { print("Data received: \($0)") }
+)
+```
+
+### `DataStore.save`
+
+### `Storage.uploadFile`

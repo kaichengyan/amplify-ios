@@ -17,7 +17,7 @@ public struct AWSAPICategoryPluginConfiguration {
     }
 
     // TODO: refactor this to remove AWSAUthService https://github.com/aws-amplify/amplify-ios/issues/74
-    init(jsonValue: JSONValue, authService: AWSAuthService) throws {
+    init(jsonValue: JSONValue, authService: AWSAuthServiceBehavior) throws {
         guard case .object(let config) = jsonValue else {
             throw PluginError.pluginConfigurationError(
                 "Could not cast incoming configuration to a JSONValue `.object`",
@@ -35,8 +35,10 @@ public struct AWSAPICategoryPluginConfiguration {
         self.init(endpoints: endpoints)
     }
 
-    private static func endpointsFromConfig(config: [String: JSONValue],
-                                            authService: AWSAuthService) throws -> [String: EndpointConfig] {
+    private static func endpointsFromConfig(
+        config: [String: JSONValue],
+        authService: AWSAuthServiceBehavior
+    ) throws -> [String: EndpointConfig] {
         var endpoints = [String: EndpointConfig]()
 
         for (key, jsonValue) in config {

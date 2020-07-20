@@ -35,8 +35,10 @@ class AWSRESTOperationTests: OperationTestBase {
     func testGetReturnsOperation() {
         setUpPlugin(endpointType: .rest)
 
+        // Use this as a semaphore to ensure the task is cleaned up before proceeding to the next test
+        let listenerWasInvoked = expectation(description: "Listener was invoked")
         let request = RESTRequest(apiName: "Valid", path: "/path")
-        let operation = Amplify.API.get(request: request, listener: nil)
+        let operation = Amplify.API.get(request: request) { _ in listenerWasInvoked.fulfill() }
 
         XCTAssertNotNil(operation)
 
@@ -46,6 +48,8 @@ class AWSRESTOperationTests: OperationTestBase {
         }
 
         XCTAssertNotNil(operation.request)
+
+        waitForExpectations(timeout: 1.00)
     }
 
     func testGetFailsWithBadAPIName() {

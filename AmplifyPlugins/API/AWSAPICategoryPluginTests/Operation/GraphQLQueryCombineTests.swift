@@ -12,7 +12,7 @@ import XCTest
 @testable import AmplifyTestCommon
 
 @available(iOS 13.0, *)
-class GraphQLCombineTests: OperationTestBase {
+class GraphQLQueryCombineTests: OperationTestBase {
     let testDocument = "query { getTodo { id name description }}"
 
     func testQuerySucceeds() {
@@ -77,7 +77,7 @@ class GraphQLCombineTests: OperationTestBase {
         sink.cancel()
     }
 
-    func testResponseError() {
+    func testQueryHandlesResponseError() {
         let sentData = #"{"data": {"foo": true}, "errors": []}"# .data(using: .utf8)!
 
         var mockTask: MockURLSessionTask!
@@ -250,30 +250,6 @@ class GraphQLCombineTests: OperationTestBase {
 
         waitForExpectations(timeout: 0.05)
         sink.cancel()
-    }
-
-    func testMutateSucceeds() {
-        XCTFail("Not yet implemented")
-    }
-
-    func testMutateFails() {
-        XCTFail("Not yet implemented")
-    }
-
-    func testMutateCancels() {
-        XCTFail("Not yet implemented")
-    }
-
-    func testSubscribeSucceeds() {
-        XCTFail("Not yet implemented")
-    }
-
-    func testSubscribeFails() {
-        XCTFail("Not yet implemented")
-    }
-
-    func testSubscribeCancels() {
-        XCTFail("Not yet implemented")
     }
 
 }

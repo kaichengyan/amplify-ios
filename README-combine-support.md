@@ -175,9 +175,13 @@ sink = operation
     .resultPublisher
     .sink(receiveCompletion: {
         if case .failure(let apiError) = $0 {
-            print("Error uploading: \(apiError)")
+            print("Error in subscription: \(apiError)")
         }
-    }, receiveValue: { print("Data received: \($0)") }
+    }, receiveValue: { event in
+        switch event {
+        
+        }
+    }
 )
 ```
 

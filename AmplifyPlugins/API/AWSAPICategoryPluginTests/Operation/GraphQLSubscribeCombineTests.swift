@@ -10,6 +10,7 @@ import XCTest
 @testable import Amplify
 @testable import AWSAPICategoryPlugin
 @testable import AmplifyTestCommon
+import AppSyncRealTimeClient
 
 @available(iOS 13.0, *)
 class GraphQLSubscribeCombineTests: OperationTestBase {
@@ -18,7 +19,30 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
     func testSubscribeResultSucceeds() throws {
         let testJSONData: JSONValue = ["foo": true]
         let sentData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
-        try setUpPluginForSubscriptionResponse()
+
+        var subscriptionItem: SubscriptionItem!
+        var subscriptionEventHandler: SubscriptionEventHandler!
+
+        let onSubscribeInvoked = expectation(description: "onSubscribeInvoked")
+        let onSubscribe: MockSubscriptionConnection.OnSubscribe = { requestString, variables, eventHandler in
+            let item = SubscriptionItem(
+                requestString: requestString,
+                variables: variables,
+                eventHandler: eventHandler
+            )
+
+            subscriptionItem = item
+            subscriptionEventHandler = eventHandler
+
+            onSubscribeInvoked.fulfill()
+            return item
+        }
+
+        let onGetOrCreateConnection: MockSubscriptionConnectionFactory.OnGetOrCreateConnection = { _, _ in
+            MockSubscriptionConnection(onSubscribe: onSubscribe, onUnsubscribe: { _ in })
+        }
+
+        try setUpPluginForSubscriptionResponse(onGetOrCreateConnection: onGetOrCreateConnection)
 
         let request = GraphQLRequest(document: testDocument, variables: nil, responseType: JSONValue.self)
 
@@ -32,11 +56,31 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         let sink = Amplify.API.subscribe(request: request)
             .resultPublisher
             .sink(
-                receiveCompletion: { print($0) },
-                receiveValue: { print($0) }
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        receivedFinish.fulfill()
+                    case .failure:
+                        receivedFailure.fulfill()
+                    }
+            }, receiveValue: { value in
+                XCTFail("This should publish data, not Void")
+                receivedValue.fulfill()
+            }
         )
 
-        waitForExpectations(timeout: 0.05)
+        wait(for: [onSubscribeInvoked], timeout: 0.05)
+
+        subscriptionEventHandler(.connection(.connecting), subscriptionItem)
+        subscriptionEventHandler(.connection(.connected), subscriptionItem)
+        subscriptionEventHandler(.data(sentData), subscriptionItem)
+        subscriptionEventHandler(.connection(.disconnected), subscriptionItem)
+
+        wait(
+            for: [receivedValue, receivedResponseError, receivedFinish, receivedFailure],
+            timeout: 0.05
+        )
+
         sink.cancel()
     }
 

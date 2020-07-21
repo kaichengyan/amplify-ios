@@ -12,27 +12,53 @@ import AWSPluginsCore
 import AppSyncRealTimeClient
 
 struct MockSubscriptionConnectionFactory: SubscriptionConnectionFactory {
+    typealias OnGetOrCreateConnection = (
+        AWSAPICategoryPluginConfiguration.EndpointConfig,
+        AWSAuthServiceBehavior
+    ) throws -> SubscriptionConnection
+
+    let onGetOrCreateConnection: OnGetOrCreateConnection
+
+    init(onGetOrCreateConnection: @escaping OnGetOrCreateConnection) {
+        self.onGetOrCreateConnection = onGetOrCreateConnection
+    }
 
     func getOrCreateConnection(
         for endpointConfig: AWSAPICategoryPluginConfiguration.EndpointConfig,
         authService: AWSAuthServiceBehavior
     ) throws -> SubscriptionConnection {
-        fatalError("Not yet implemented")
+        try onGetOrCreateConnection(endpointConfig, authService)
     }
 
 }
 
 struct MockSubscriptionConnection: SubscriptionConnection {
+    typealias OnSubscribe = (
+        String,
+        [String: Any?]?,
+        @escaping SubscriptionEventHandler
+    ) -> SubscriptionItem
+
+    typealias OnUnsubscribe = (SubscriptionItem) -> Void
+
+    let onSubscribe: OnSubscribe
+    let onUnsubscribe: OnUnsubscribe
+
+    init(onSubscribe: @escaping OnSubscribe, onUnsubscribe: @escaping OnUnsubscribe) {
+        self.onSubscribe = onSubscribe
+        self.onUnsubscribe = onUnsubscribe
+    }
+
     func subscribe(
         requestString: String,
         variables: [String: Any?]?,
         eventHandler: @escaping SubscriptionEventHandler
     ) -> SubscriptionItem {
-        fatalError("Not yet implemented")
+        onSubscribe(requestString, variables, eventHandler)
     }
 
     func unsubscribe(item: SubscriptionItem) {
-        fatalError("Not yet implemented")
+        onUnsubscribe(item)
     }
 
 }

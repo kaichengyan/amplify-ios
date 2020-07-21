@@ -70,8 +70,13 @@ class OperationTestBase: XCTestCase {
         try setUpPlugin(sessionFactory: sessionFactory, endpointType: endpointType)
     }
 
-    func setUpPluginForSubscriptionResponse() throws {
-        let subscriptionConnectionFactory = MockSubscriptionConnectionFactory()
+    func setUpPluginForSubscriptionResponse(
+        onGetOrCreateConnection: @escaping MockSubscriptionConnectionFactory.OnGetOrCreateConnection
+    ) throws {
+        let subscriptionConnectionFactory = MockSubscriptionConnectionFactory(
+            onGetOrCreateConnection: onGetOrCreateConnection
+        )
+
         try setUpPlugin(
             subscriptionConnectionFactory: subscriptionConnectionFactory,
             endpointType: .graphQL

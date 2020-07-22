@@ -5,17 +5,13 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-import Combine
 import XCTest
-
 @testable import Amplify
 @testable import AmplifyTestCommon
 @testable import AWSAPICategoryPlugin
-
 import AppSyncRealTimeClient
 
-@available(iOS 13.0, *)
-class GraphQLSubscribeCombineTests: OperationTestBase {
+class GraphQLSubscribeTests: OperationTestBase {
 
     // Setup expectations
     var onSubscribeInvoked: XCTestExpectation!
@@ -36,8 +32,6 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
     // subscription system
     var subscriptionItem: SubscriptionItem!
     var subscriptionEventHandler: SubscriptionEventHandler!
-
-    var sink: AnyCancellable?
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -266,41 +260,38 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
             responseType: JSONValue.self
         )
 
-        let operation = Amplify.API.subscribe(request: request)
-        let sink = operation
-            .resultPublisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure:
-                        self.receivedCompletionFailure.fulfill()
-                    case .finished:
-                        self.receivedCompletionFinish.fulfill()
+        let operation = Amplify.API.subscribe(
+            request: request,
+            valueListener: { value in
+                switch value {
+                case .connection(let connectionState):
+                    switch connectionState {
+                    case .connecting:
+                        break
+                    case .connected:
+                        self.receivedConnected.fulfill()
+                    case .disconnected:
+                        self.receivedDisconnected.fulfill()
                     }
-            }, receiveValue: { value in
-//                switch value {
-//                case .connection(let connectionState):
-//                    switch connectionState {
-//                    case .connecting:
-//                        break
-//                    case .connected:
-//                        self.receivedConnected.fulfill()
-//                    case .disconnected:
-//                        self.receivedDisconnected.fulfill()
-//                    }
-//                case .data(let result):
-//                    switch result {
-//                    case .success(let actualValue):
-//                        if let expectedValue = expectedValue {
-//                            XCTAssertEqual(actualValue, expectedValue)
-//                        }
-//                        self.receivedSubscriptionEventData.fulfill()
-//                    case .failure:
-//                        self.receivedSubscriptionEventError.fulfill()
-//                    }
-//                }
+                case .data(let result):
+                    switch result {
+                    case .success(let actualValue):
+                        if let expectedValue = expectedValue {
+                            XCTAssertEqual(actualValue, expectedValue)
+                        }
+                        self.receivedSubscriptionEventData.fulfill()
+                    case .failure:
+                        self.receivedSubscriptionEventError.fulfill()
+                    }
+                }
+        }, completionListener: { result in
+            switch result {
+            case .failure:
+                self.receivedCompletionFailure.fulfill()
+            case .success:
+                self.receivedCompletionFinish.fulfill()
             }
-        )
+        })
 
         return operation
     }

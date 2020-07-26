@@ -37,7 +37,8 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
     var subscriptionItem: SubscriptionItem!
     var subscriptionEventHandler: SubscriptionEventHandler!
 
-    var sink: AnyCancellable?
+    var resultSink: AnyCancellable?
+    var valueSink: AnyCancellable?
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -267,7 +268,7 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         )
 
         let operation = Amplify.API.subscribe(request: request)
-        let sink = operation
+        resultSink = operation
             .resultPublisher
             .sink(
                 receiveCompletion: { completion in
@@ -277,31 +278,36 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
                     case .finished:
                         self.receivedCompletionFinish.fulfill()
                     }
-            }, receiveValue: { value in
-//                switch value {
-//                case .connection(let connectionState):
-//                    switch connectionState {
-//                    case .connecting:
-//                        break
-//                    case .connected:
-//                        self.receivedConnected.fulfill()
-//                    case .disconnected:
-//                        self.receivedDisconnected.fulfill()
-//                    }
-//                case .data(let result):
-//                    switch result {
-//                    case .success(let actualValue):
-//                        if let expectedValue = expectedValue {
-//                            XCTAssertEqual(actualValue, expectedValue)
-//                        }
-//                        self.receivedSubscriptionEventData.fulfill()
-//                    case .failure:
-//                        self.receivedSubscriptionEventError.fulfill()
-//                    }
-//                }
-            }
+            }, receiveValue: { _ in }
         )
+
+        valueSink = operation
+            .inProcessPublisher
+            .sink { value in
+                switch value {
+                case .connection(let connectionState):
+                    switch connectionState {
+                    case .connecting:
+                        break
+                    case .connected:
+                        self.receivedConnected.fulfill()
+                    case .disconnected:
+                        self.receivedDisconnected.fulfill()
+                    }
+                case .data(let result):
+                    switch result {
+                    case .success(let actualValue):
+                        if let expectedValue = expectedValue {
+                            XCTAssertEqual(actualValue, expectedValue)
+                        }
+                        self.receivedSubscriptionEventData.fulfill()
+                    case .failure:
+                        self.receivedSubscriptionEventError.fulfill()
+                    }
+                }
+        }
 
         return operation
     }
+    
 }

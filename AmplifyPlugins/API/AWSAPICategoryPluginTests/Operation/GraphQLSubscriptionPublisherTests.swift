@@ -15,48 +15,47 @@ import XCTest
 import AppSyncRealTimeClient
 
 @available(iOS 13.0, *)
-class GraphQLSubscribeCombineTests: OperationTestBase {
-
+class GraphQLSubscriptionPublisherTests: OperationTestBase {
+    
     // Setup expectations
     var onSubscribeInvoked: XCTestExpectation!
-
+    
     // Callback expectations
     var receivedCompletionFinish: XCTestExpectation!
     var receivedCompletionFailure: XCTestExpectation!
-
+    
     // Subscription lifefycle expectations
     var receivedConnected: XCTestExpectation!
     var receivedDisconnected: XCTestExpectation!
-
+    
     // Subscription item expectations
     var receivedSubscriptionEventData: XCTestExpectation!
     var receivedSubscriptionEventError: XCTestExpectation!
-
+    
     // Handles to the subscription item and event handler used to make mock calls into the
     // subscription system
     var subscriptionItem: SubscriptionItem!
     var subscriptionEventHandler: SubscriptionEventHandler!
-
-    var resultSink: AnyCancellable?
-    var valueSink: AnyCancellable?
-
+    
+    var sink: AnyCancellable?
+    
     override func setUpWithError() throws {
         try super.setUpWithError()
-
+        
         onSubscribeInvoked = expectation(description: "onSubscribeInvoked")
-
+        
         receivedCompletionFinish = expectation(description: "receivedCompletionFinish")
         receivedCompletionFailure = expectation(description: "receivedCompletionFailure")
-
+        
         receivedConnected = expectation(description: "receivedConnected")
         receivedDisconnected = expectation(description: "receivedDisconnected")
-
+        
         receivedSubscriptionEventData = expectation(description: "receivedSubscriptionEventData")
         receivedSubscriptionEventError = expectation(description: "receivedSubscriptionEventError")
-
+        
         try setUpMocksAndSubscriptionItems()
     }
-
+    
     /// Lifecycle test
     ///
     /// When:
@@ -78,18 +77,18 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         receivedDisconnected.shouldTrigger = true
         receivedSubscriptionEventData.shouldTrigger = true
         receivedSubscriptionEventError.shouldTrigger = false
-
+        
         subscribe(expecting: testJSON)
         wait(for: [onSubscribeInvoked], timeout: 0.05)
-
+        
         subscriptionEventHandler(.connection(.connecting), subscriptionItem)
         subscriptionEventHandler(.connection(.connected), subscriptionItem)
         subscriptionEventHandler(.data(testData), subscriptionItem)
         subscriptionEventHandler(.connection(.disconnected), subscriptionItem)
-
+        
         waitForExpectations(timeout: 0.05)
     }
-
+    
     /// Lifecycle test
     ///
     /// When:
@@ -108,17 +107,17 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         receivedDisconnected.shouldTrigger = true
         receivedSubscriptionEventData.shouldTrigger = false
         receivedSubscriptionEventError.shouldTrigger = false
-
+        
         subscribe()
         wait(for: [onSubscribeInvoked], timeout: 0.05)
-
+        
         subscriptionEventHandler(.connection(.connecting), subscriptionItem)
         subscriptionEventHandler(.connection(.connected), subscriptionItem)
         subscriptionEventHandler(.connection(.disconnected), subscriptionItem)
-
+        
         waitForExpectations(timeout: 0.05)
     }
-
+    
     /// Lifecycle test
     ///
     /// When:
@@ -136,16 +135,16 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         receivedDisconnected.shouldTrigger = false
         receivedSubscriptionEventData.shouldTrigger = false
         receivedSubscriptionEventError.shouldTrigger = false
-
+        
         subscribe()
         wait(for: [onSubscribeInvoked], timeout: 0.05)
-
+        
         subscriptionEventHandler(.connection(.connecting), subscriptionItem)
         subscriptionEventHandler(.failed("Error"), subscriptionItem)
-
+        
         waitForExpectations(timeout: 0.05)
     }
-
+    
     /// Lifecycle test
     ///
     /// When:
@@ -166,18 +165,18 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         receivedDisconnected.shouldTrigger = true
         receivedSubscriptionEventData.shouldTrigger = false
         receivedSubscriptionEventError.shouldTrigger = true
-
+        
         subscribe()
         wait(for: [onSubscribeInvoked], timeout: 0.05)
-
+        
         subscriptionEventHandler(.connection(.connecting), subscriptionItem)
         subscriptionEventHandler(.connection(.connected), subscriptionItem)
         subscriptionEventHandler(.data(testData), subscriptionItem)
         subscriptionEventHandler(.connection(.disconnected), subscriptionItem)
-
+        
         waitForExpectations(timeout: 0.05)
     }
-
+    
     func testMultipleSuccessValues() throws {
         let testJSON: JSONValue = ["foo": true]
         let testData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
@@ -188,19 +187,19 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         receivedSubscriptionEventData.shouldTrigger = true
         receivedSubscriptionEventData.expectedFulfillmentCount = 2
         receivedSubscriptionEventError.shouldTrigger = false
-
+        
         subscribe(expecting: testJSON)
         wait(for: [onSubscribeInvoked], timeout: 0.05)
-
+        
         subscriptionEventHandler(.connection(.connecting), subscriptionItem)
         subscriptionEventHandler(.connection(.connected), subscriptionItem)
         subscriptionEventHandler(.data(testData), subscriptionItem)
         subscriptionEventHandler(.data(testData), subscriptionItem)
         subscriptionEventHandler(.connection(.disconnected), subscriptionItem)
-
+        
         waitForExpectations(timeout: 0.05)
     }
-
+    
     func testMixedSuccessAndErrorValues() throws {
         let successfulTestData = #"{"data": {"foo": true}}"# .data(using: .utf8)!
         let invalidTestData = #"{"data": {"foo": true}, "errors": []}"# .data(using: .utf8)!
@@ -211,22 +210,22 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         receivedSubscriptionEventData.shouldTrigger = true
         receivedSubscriptionEventData.expectedFulfillmentCount = 2
         receivedSubscriptionEventError.shouldTrigger = true
-
+        
         subscribe()
         wait(for: [onSubscribeInvoked], timeout: 0.05)
-
+        
         subscriptionEventHandler(.connection(.connecting), subscriptionItem)
         subscriptionEventHandler(.connection(.connected), subscriptionItem)
         subscriptionEventHandler(.data(successfulTestData), subscriptionItem)
         subscriptionEventHandler(.data(invalidTestData), subscriptionItem)
         subscriptionEventHandler(.data(successfulTestData), subscriptionItem)
         subscriptionEventHandler(.connection(.disconnected), subscriptionItem)
-
+        
         waitForExpectations(timeout: 0.05)
     }
-
+    
     // MARK: - Utilities
-
+    
     /// Sets up test with a mock subscription connection handler that populates
     /// self.subscriptionItem and self.subscriptionEventHandler, then fulfills
     /// self.onSubscribeInvoked
@@ -238,20 +237,20 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
                 variables: variables,
                 eventHandler: eventHandler
             )
-
+            
             self.subscriptionItem = item
             self.subscriptionEventHandler = eventHandler
             self.onSubscribeInvoked.fulfill()
             return item
         }
-
+        
         let onGetOrCreateConnection: MockSubscriptionConnectionFactory.OnGetOrCreateConnection = { _, _ in
             MockSubscriptionConnection(onSubscribe: onSubscribe, onUnsubscribe: { _ in })
         }
-
+        
         try setUpPluginForSubscriptionResponse(onGetOrCreateConnection: onGetOrCreateConnection)
     }
-
+    
     /// Calls `Amplify.API.subscribe` with a request made from a generic document, and returns
     /// the operation created from that subscription. If `expectedValue` is not nil, also asserts
     /// that the received value is equal to the expected value
@@ -260,16 +259,16 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
         expecting expectedValue: JSONValue? = nil
     ) -> GraphQLSubscriptionOperation<JSONValue> {
         let testDocument = "subscribe { subscribeTodos { id name description }}"
-
+        
         let request = GraphQLRequest(
             document: testDocument,
             variables: nil,
             responseType: JSONValue.self
         )
-
+        
         let operation = Amplify.API.subscribe(request: request)
-        resultSink = operation
-            .resultPublisher
+        sink = operation
+            .subscriptionPublisher
             .sink(
                 receiveCompletion: { completion in
                     switch completion {
@@ -278,12 +277,7 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
                     case .finished:
                         self.receivedCompletionFinish.fulfill()
                     }
-            }, receiveValue: { _ in }
-        )
-
-        valueSink = operation
-            .inProcessPublisher
-            .sink { value in
+            }, receiveValue: { value in
                 switch value {
                 case .connection(let connectionState):
                     switch connectionState {
@@ -305,9 +299,10 @@ class GraphQLSubscribeCombineTests: OperationTestBase {
                         self.receivedSubscriptionEventError.fulfill()
                     }
                 }
-        }
-
+            }
+        )
+        
         return operation
     }
-
+    
 }

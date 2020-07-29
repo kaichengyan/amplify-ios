@@ -9,7 +9,10 @@ import Combine
 import Foundation
 
 @available(iOS 13.0, *)
-public extension AmplifyInProcessOperation where Success == Void {
+public extension AmplifyInProcessReportingOperation where
+    Success == Void,
+    Failure == APIError
+{
     var subscriptionPublisher: AnyPublisher<InProcess, Failure> {
         // Suppress Void results from the result publisher, but continue to emit completions
         let transformedResultPublisher = resultPublisher

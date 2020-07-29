@@ -17,7 +17,7 @@ extension AmplifyInProcessReportingOperation {
     /// or failure on the `resultPublisher`. The `inProcessPublisher` reports a stream of values associated with the
     /// ongoing work of the AmplifyOperation. For example, a `StorageUploadFileOperation` uses the `inProcessOperation`
     /// to report the `Progress` of the file toward completion.
-    public var inProcessPublisher: AnyPublisher<InProcess, Never> {
+    var inProcessPublisher: AnyPublisher<InProcess, Never> {
         // We set this value in the initializer, so it's safe to force-unwrap and force-cast here
         // swiftlint:disable:next force_cast
         let subject = inProcessSubject as! PassthroughSubject<InProcess, Never>
@@ -44,4 +44,17 @@ extension AmplifyInProcessReportingOperation {
         subject.send(completion: completion)
     }
 
+}
+
+@available(iOS 13.0, *)
+public extension AmplifyInProcessReportingOperation
+where InProcess == Progress, Success == Void, Failure == StorageError
+{
+    var completionPublisher: AnyPublisher<Void, StorageError> {
+        resultPublisher
+    }
+
+    var progressPublisher: AnyPublisher<Progress, Never> {
+        inProcessPublisher
+    }
 }

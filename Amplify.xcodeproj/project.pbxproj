@@ -549,6 +549,7 @@
 		FADB3A6823612940006D6FE9 /* BasicClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADB3A6723612940006D6FE9 /* BasicClosure.swift */; };
 		FAE4145F23999BC900CE94C2 /* Result+Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE4145E23999BC900CE94C2 /* Result+Void.swift */; };
 		FAE414612399A6A500CE94C2 /* ModelRegistryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE414602399A6A500CE94C2 /* ModelRegistryTests.swift */; };
+		FAEF832124CF277F0068912D /* DataStoreCategory+Behavior+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEF831F24CF24300068912D /* DataStoreCategory+Behavior+Combine.swift */; };
 		FAF1B88423392F7C007F1435 /* ConcurrentDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1B88323392F7C007F1435 /* ConcurrentDispatcher.swift */; };
 		FAF1B88623392F96007F1435 /* SerialDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1B88523392F96007F1435 /* SerialDispatcher.swift */; };
 		FAF512AE23986791001ADF4E /* AmplifyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF512AD23986791001ADF4E /* AmplifyModels.swift */; };
@@ -1357,6 +1358,7 @@
 		FADB3A6723612940006D6FE9 /* BasicClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicClosure.swift; sourceTree = "<group>"; };
 		FAE4145E23999BC900CE94C2 /* Result+Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Void.swift"; sourceTree = "<group>"; };
 		FAE414602399A6A500CE94C2 /* ModelRegistryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRegistryTests.swift; sourceTree = "<group>"; };
+		FAEF831F24CF24300068912D /* DataStoreCategory+Behavior+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataStoreCategory+Behavior+Combine.swift"; sourceTree = "<group>"; };
 		FAF1B88323392F7C007F1435 /* ConcurrentDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentDispatcher.swift; sourceTree = "<group>"; };
 		FAF1B88523392F96007F1435 /* SerialDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialDispatcher.swift; sourceTree = "<group>"; };
 		FAF1B8872339633C007F1435 /* ConcurrentDispatcherPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentDispatcherPerformanceTests.swift; sourceTree = "<group>"; };
@@ -2339,6 +2341,7 @@
 				B9FAA13B238BBE67009414B4 /* DataStoreCallback+Combine.swift */,
 				B92E03A42367CE7A006CEB8D /* DataStoreCategory.swift */,
 				B92E039E2367CE79006CEB8D /* DataStoreCategory+Behavior.swift */,
+				FAEF831F24CF24300068912D /* DataStoreCategory+Behavior+Combine.swift */,
 				FA176ED42385012000C5C5F9 /* DataStoreCategory+HubPayloadEventName.swift */,
 				B92E03A02367CE79006CEB8D /* DataStoreCategoryBehavior.swift */,
 				B92E03A32367CE79006CEB8D /* DataStoreCategoryConfiguration.swift */,
@@ -4205,6 +4208,7 @@
 				FAA2E8C823A029C800E420EA /* LoggingCategory+Resettable.swift in Sources */,
 				B4ADE8F4241063820007E86C /* AuthCategory.swift in Sources */,
 				B9FAA10B23878122009414B4 /* ModelField+Association.swift in Sources */,
+				FAEF832124CF277F0068912D /* DataStoreCategory+Behavior+Combine.swift in Sources */,
 				95DAAB22237E63370028544F /* SpeechType.swift in Sources */,
 				95DAAB8C237F13D10028544F /* PredictionsTextToSpeechRequest.swift in Sources */,
 				B493E69124524D3200D9E521 /* DeliveryDestination.swift in Sources */,
